@@ -25,11 +25,11 @@ FetchContent_MakeAvailable(raylib)
 # ---------------------------------------------------------
 # Model Library (Compiled once, shared with tests & GUI)
 # ---------------------------------------------------------
-file(GLOB_RECURSE MODEL_SOURCES "src/model/*.cpp")
-
-add_library(card_model STATIC
-    ${MODEL_SOURCES}
+file(GLOB_RECURSE CORE_SOURCES 
+    "src/model/*.cpp" 
+    "src/controller/*.cpp"
 )
+add_library(card_model STATIC ${CORE_SOURCES})
 
 target_include_directories(card_model PUBLIC 
     include
