@@ -1,5 +1,5 @@
 #pragma once
-#include "model/Card.hpp"
+#include "Card.hpp"
 #include <vector>
 #include <optional>
 #include <algorithm>

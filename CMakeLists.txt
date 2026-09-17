@@ -9,7 +9,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Download modern Raylib (master branch or 5.5 has the updated CMake policy)
+# ---------------------------------------------------------
+# Dependencies: Raylib
+# ---------------------------------------------------------
 include(FetchContent)
 FetchContent_Declare(
     raylib
@@ -17,26 +19,37 @@ FetchContent_Declare(
     GIT_TAG master
 )
 
-# Prevent Raylib from compiling unnecessary examples and tests
 set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-
 FetchContent_MakeAvailable(raylib)
 
-# Include paths
-include_directories(
+# ---------------------------------------------------------
+# Model Library (Compiled once, shared with tests & GUI)
+# ---------------------------------------------------------
+file(GLOB_RECURSE MODEL_SOURCES "src/model/*.cpp")
+
+add_library(card_model STATIC
+    ${MODEL_SOURCES}
+)
+
+target_include_directories(card_model PUBLIC 
     include
+)
+
+# ---------------------------------------------------------
+# Main Game Executable
+# ---------------------------------------------------------
+add_executable(card_game 
+    src/main.cpp
+)
+
+target_include_directories(card_game PRIVATE 
     ${raylib_SOURCE_DIR}/src
 )
 
-# Collect source files
-file(GLOB_RECURSE SOURCES "src/*.cpp")
-
-# Executable target
-add_executable(card_game ${SOURCES})
-
-# macOS Frameworks for windowing and rendering
+# Link model + Raylib + platform frameworks
 if(APPLE)
     target_link_libraries(card_game PRIVATE 
+        card_model
         raylib 
         "-framework OpenGL" 
         "-framework Cocoa" 
@@ -44,5 +57,14 @@ if(APPLE)
         "-framework CoreVideo"
     )
 else()
-    target_link_libraries(card_game PRIVATE raylib)
+    target_link_libraries(card_game PRIVATE 
+        card_model
+        raylib
+    )
 endif()
+
+# ---------------------------------------------------------
+# Testing Suite
+# ---------------------------------------------------------
+enable_testing()
+add_subdirectory(tests)

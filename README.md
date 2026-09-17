@@ -1,18 +1,22 @@
-# SoftEng-group-project
+# 🃏 SoftEng-group-project
 
-=== WHAT TO RUN WHEN (DONT PANIC CHEATSHEET) ===
+Welcome to the repo! We are building an Italian card game suite (starting with Briscola, then Scopa).
 
-Remember: this is C++, you gotta compile your stuff after you change it or nothing happens!!
+> Friendly reminder: This is C++, so your computer doesn't automatically know you edited a file. You have to compile your code or literally nothing will change! 💀
+
+=======================================================
+=== THE "DON'T PANIC" BUILD CHEATSHEET              ===
+=======================================================
 
 --- 1. NORMAL EVERYDAY WORK (you just edited some code) ---
-Don't rerun cmake, just do the fast build:
+Don't rerun cmake, just do the fast incremental build:
 
 [Mac / Linux]
 cmake --build build && ./build/card_game
 
 [Windows (PowerShell)]
 cmake --build build --config Debug ; .\build\Debug\card_game.exe
-(or .\build\card_game.exe if you're on MinGW)
+(or .\build\card_game.exe if you use MinGW)
 
 [VS Code shortcuts (easiest)]
 - F7 = compile only
@@ -36,7 +40,7 @@ cmake --build build --config Debug
 Ctrl+Shift+P (or Cmd+Shift+P on Mac) -> search "CMake: Configure"
 
 --- 3. EVERYTHING IS BROKEN / WEIRD LINK ERRORS / HELP ---
-Nuke the build folder and let it start from scratch:
+Nuke the build folder and let it start fresh from zero:
 
 [Mac / Linux]
 rm -rf build
@@ -53,56 +57,50 @@ cmake --build build --config Debug
 [VS Code]
 Ctrl+Shift+P (or Cmd+Shift+P) -> "CMake: Delete Cache and Reconfigure"
 
-Here is the general structure we could follow for the project.
-'''
-card-game-suite/
+--- 4. TEST THE IMPLEMENTATIONS ---
+compile: ctest --test-dir build --output-on-failure
+to test the implementation of the game.
+
+
+=======================================================
+=== PROJECT STRUCTURE                               ===
+=======================================================
+
+SoftEng/
 ├── CMakeLists.txt
 ├── README.md
 │
-├── include/                          # Public header files
-│   ├── model/                        # BACKEND: Core domain & rules
+├── include/                          # Headers (.hpp go here)
+│   ├── model/                        # BACKEND: Card, Deck, and Rules logic
 │   │   ├── Card.hpp
 │   │   ├── Deck.hpp
 │   │   ├── Hand.hpp
 │   │   ├── Player.hpp
-│   │   ├── GameRules.hpp             # Strategy interface
-│   │   ├── BriscolaRules.hpp         # Concrete strategy 1
-│   │   └── ScopaRules.hpp            # Concrete strategy 2
+│   │   ├── GameRules.hpp             # Shared rules interface
+│   │   ├── BriscolaRules.hpp         # Briscola mechanics & scoring
+│   │   └── ScopaRules.hpp            # Scopa mechanics & captures
 │   │
-│   ├── controller/                   # GLUE: Turn orchestration & events
-│   │   ├── GameEngine.hpp            # Central state & loop manager
-│   │   ├── GameObserver.hpp          # Observer interface (event publisher)
-│   │   └── GameState.hpp             # Struct/Enums representing public snapshot
+│   ├── controller/                   # GLUE: Turn orchestration & loops
+│   │   ├── GameEngine.hpp
+│   │   ├── GameObserver.hpp
+│   │   └── GameState.hpp
 │   │
-│   └── view/                         # FRONTEND: UI rendering & input capture
-│       ├── IView.hpp                 # Abstract UI interface
-│       ├── ConsoleView.hpp           # CLI implementation (terminal)
-│       └── GraphicalView.hpp         # (Optional) SFML/Raylib/SDL GUI
+│   └── view/                         # FRONTEND: Screen stuff & inputs
+│       ├── IView.hpp
+│       ├── ConsoleView.hpp           # Terminal UI
+│       └── GraphicalView.hpp         # Raylib 2D GUI
 │
-├── src/                              # Implementation files (.cpp)
-│   ├── main.cpp                      # Application entry point
-│   │
+├── src/                              # Actual implementations (.cpp go here)
+│   ├── main.cpp                      # Starts the game
 │   ├── model/
-│   │   ├── Card.cpp
-│   │   ├── Deck.cpp
-│   │   ├── Hand.cpp
-│   │   ├── Player.cpp
-│   │   ├── BriscolaRules.cpp
-│   │   └── ScopaRules.cpp
-│   │
 │   ├── controller/
-│   │   └── GameEngine.cpp
-│   │
 │   └── view/
-│       ├── ConsoleView.cpp
-│       └── GraphicalView.cpp         # (If building GUI)
 │
-├── assets/                           # Optional visual assets (if GUI)
-│   └── cards/                        # SVGs / PNGs for Italian card deck
+├── assets/                           # Card textures / SVGs / sprites
+│   └── cards/
 │
-└── tests/                            # Unit tests (Catch2 or GoogleTest)
+└── tests/                            # Unit tests (let's keep these green!)
     ├── CMakeLists.txt
     ├── test_deck.cpp
     ├── test_briscola_rules.cpp
     └── test_scopa_rules.cpp
-'''
