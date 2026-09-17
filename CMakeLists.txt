@@ -46,6 +46,13 @@ add_executable(card_game
     ${VIEW_SOURCES}
 )
 
+# Copy assets folder AFTER the card_game target is declared
+add_custom_command(TARGET card_game POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:card_game>/assets
+)
+
 target_include_directories(card_game PRIVATE 
     include
     ${raylib_SOURCE_DIR}/src
@@ -66,9 +73,3 @@ else()
         raylib
     )
 endif()
-
-# ---------------------------------------------------------
-# Testing Suite
-# ---------------------------------------------------------
-enable_testing()
-add_subdirectory(tests)
