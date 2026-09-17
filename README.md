@@ -1,71 +1,94 @@
 # 🃏 SoftEng-group-project
 
-Welcome to the repo! We are building an Italian card game suite (starting with Briscola, then Scopa).
+Welcome to the repo! We are building an Italian card game suite (starting with **Briscola**, then **Scopa**).
 
-> Friendly reminder: This is C++, so your computer doesn't automatically know you edited a file. You have to compile your code or literally nothing will change! 💀
+> **Friendly reminder:** This is C++, so your computer doesn't automatically know you edited a file. You have to *compile* your code or literally nothing will change! 💀
 
-=======================================================
-=== THE "DON'T PANIC" BUILD CHEATSHEET              ===
-=======================================================
+---
 
---- 1. NORMAL EVERYDAY WORK (you just edited some code) ---
-Don't rerun cmake, just do the fast incremental build:
+## 🚀 Build Cheatsheet
 
-[Mac / Linux]
+### 1. Normal everyday work *(you just edited some code)*
+
+Don't rerun CMake — just do the fast incremental build:
+
+**Mac / Linux**
+```bash
 cmake --build build && ./build/card_game
+```
 
-[Windows (PowerShell)]
+**Windows (PowerShell)**
+```powershell
 cmake --build build --config Debug ; .\build\Debug\card_game.exe
-(or .\build\card_game.exe if you use MinGW)
+# or .\build\card_game.exe if you use MinGW
+```
 
-[VS Code shortcuts (easiest)]
-- F7 = compile only
-- F5 = compile + run with debugger
-- Or just click the "Play" button at the bottom bar
+**VS Code shortcuts (easiest)**
+| Key | Action |
+|-----|--------|
+| `F7` | Compile only |
+| `F5` | Compile + run with debugger |
+| ▶️ | Click the "Play" button in the bottom bar |
 
---- 2. YOU ADDED A NEW .cpp FILE or TOUCHED CMakeLists.txt ---
+### 2. You added a new `.cpp` file or touched `CMakeLists.txt`
+
 CMake needs to see the new files, so run configure again:
 
-[Mac / Linux]
+**Mac / Linux**
+```bash
 cmake -B build -S .
 cmake --build build
 ./build/card_game
+```
 
-[Windows]
+**Windows**
+```powershell
 cmake -B build -S .
 cmake --build build --config Debug
 .\build\Debug\card_game.exe
+```
 
-[VS Code]
-Ctrl+Shift+P (or Cmd+Shift+P on Mac) -> search "CMake: Configure"
+**VS Code**
+```
+Ctrl+Shift+P (Cmd+Shift+P on Mac) → "CMake: Configure"
+```
 
---- 3. EVERYTHING IS BROKEN / WEIRD LINK ERRORS / HELP ---
+### 3. Everything is broken / weird link errors / help 🔥
+
 Nuke the build folder and let it start fresh from zero:
 
-[Mac / Linux]
+**Mac / Linux**
+```bash
 rm -rf build
 cmake -B build -S .
 cmake --build build
 ./build/card_game
+```
 
-[Windows (PowerShell)]
+**Windows (PowerShell)**
+```powershell
 rm -r -fo build
 cmake -B build -S .
 cmake --build build --config Debug
 .\build\Debug\card_game.exe
+```
 
-[VS Code]
-Ctrl+Shift+P (or Cmd+Shift+P) -> "CMake: Delete Cache and Reconfigure"
+**VS Code**
+```
+Ctrl+Shift+P (Cmd+Shift+P) → "CMake: Delete Cache and Reconfigure"
+```
 
---- 4. TEST THE IMPLEMENTATIONS ---
-compile: ctest --test-dir build --output-on-failure
-to test the implementation of the game.
+### 4. Test the implementations
 
+```bash
+ctest --test-dir build --output-on-failure
+```
 
-=======================================================
-=== PROJECT STRUCTURE                               ===
-=======================================================
+---
 
+## 📁 Project Structure
+
+```
 SoftEng/
 ├── CMakeLists.txt
 ├── README.md
@@ -104,3 +127,5 @@ SoftEng/
     ├── test_deck.cpp
     ├── test_briscola_rules.cpp
     └── test_scopa_rules.cpp
+```
+
