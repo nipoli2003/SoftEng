@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
 
-# Allow dependencies that still specify older CMake minimum versions
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
 
 project(CardGameSuite VERSION 1.0.0 LANGUAGES C CXX)
@@ -23,30 +22,35 @@ set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(raylib)
 
 # ---------------------------------------------------------
-# Model Library (Compiled once, shared with tests & GUI)
+# Model & Controller Library (Model + Controller, Headless)
 # ---------------------------------------------------------
-file(GLOB_RECURSE CORE_SOURCES 
-    "src/model/*.cpp" 
-    "src/controller/*.cpp"
+file(GLOB_RECURSE MODEL_SOURCES "src/model/*.cpp")
+file(GLOB_RECURSE CONTROLLER_SOURCES "src/controller/*.cpp")
+
+add_library(card_model STATIC
+    ${MODEL_SOURCES}
+    ${CONTROLLER_SOURCES}
 )
-add_library(card_model STATIC ${CORE_SOURCES})
 
 target_include_directories(card_model PUBLIC 
     include
 )
 
 # ---------------------------------------------------------
-# Main Game Executable
+# Main Game Executable (Links Model + View + Raylib)
 # ---------------------------------------------------------
+file(GLOB_RECURSE VIEW_SOURCES "src/view/*.cpp")
+
 add_executable(card_game 
     src/main.cpp
+    ${VIEW_SOURCES}
 )
 
 target_include_directories(card_game PRIVATE 
+    include
     ${raylib_SOURCE_DIR}/src
 )
 
-# Link model + Raylib + platform frameworks
 if(APPLE)
     target_link_libraries(card_game PRIVATE 
         card_model

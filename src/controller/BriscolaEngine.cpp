@@ -58,11 +58,25 @@ bool BriscolaEngine::playCard(std::size_t handIndex) {
 
     m_tableCards.push_back({current.id(), *played});
 
-    // Check if full trick completed
+    // Check if the trick is full
     if (m_tableCards.size() == static_cast<std::size_t>(m_playerCount)) {
-        resolveCurrentTrick();
+        // Evaluate the winner, but DO NOT clear the cards yet!
+        std::vector<Card> trickCards;
+        for (const auto& item : m_tableCards) {
+            trickCards.push_back(item.card);
+        }
+        std::size_t winIndex = m_rules->evaluateTrick(trickCards);
+        int winnerId = m_tableCards[winIndex].playerId;
+
+        m_state.lastTrickWinnerId = winnerId;
+        m_state.statusMessage = m_players[winnerId].name() + " takes the trick!";
+        
+        // Enter resolving phase and start a 1.2-second timer
+        m_state.phase = GamePhase::TrickResolving;
+        m_trickResolveTimer = 1.2f;
     } else {
         m_activeTurnIndex = (m_activeTurnIndex + 1) % m_playerCount;
+        m_state.statusMessage = m_players[m_activeTurnIndex].name() + "'s turn";
     }
 
     syncGameState();
@@ -70,9 +84,20 @@ bool BriscolaEngine::playCard(std::size_t handIndex) {
 }
 
 void BriscolaEngine::update() {
-    if (m_state.phase != GamePhase::PlayingTurn) return;
+    // 1. Handle trick viewing delay
+    if (m_state.phase == GamePhase::TrickResolving) {
+        // Uses ~60FPS delta or 1/60th second
+        m_trickResolveTimer -= (1.0f / 60.0f);
+        if (m_trickResolveTimer <= 0.0f) {
+            resolveCurrentTrick(); // Cleans up and deals new cards
+            m_state.phase = GamePhase::PlayingTurn;
+            syncGameState();
+        }
+        return;
+    }
 
-    if (m_players[m_activeTurnIndex].isAI()) {
+    // 2. Play AI turn if active
+    if (m_state.phase == GamePhase::PlayingTurn && m_players[m_activeTurnIndex].isAI()) {
         triggerAITurn();
     }
 }

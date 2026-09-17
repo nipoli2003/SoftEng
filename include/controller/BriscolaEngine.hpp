@@ -37,4 +37,6 @@ private:
     int m_activeTurnIndex{0};
     int m_trickLeaderIndex{0};
     int m_humanPlayerIndex{0}; // Typically player 0
+
+    float m_trickResolveTimer{0.0f};
 };
