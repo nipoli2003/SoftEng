@@ -54,7 +54,7 @@ cmake --build build --config Debug
 Ctrl+Shift+P (or Cmd+Shift+P) -> "CMake: Delete Cache and Reconfigure"
 
 Here is the general structure we could follow for the project.
-
+'''
 card-game-suite/
 ├── CMakeLists.txt
 ├── README.md
@@ -105,3 +105,4 @@ card-game-suite/
     ├── test_deck.cpp
     ├── test_briscola_rules.cpp
     └── test_scopa_rules.cpp
+'''
