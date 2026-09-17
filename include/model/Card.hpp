@@ -24,33 +24,33 @@ enum class Rank {
 };
 
 class Card {
-public:
-    Card(Rank rank, Suit suit, int deckOrigin = 0)
-        : m_rank(rank), m_suit(suit), m_deckOrigin(deckOrigin) {}
+    public:
+        Card(Rank rank, Suit suit, int deckOrigin = 0)
+            : m_rank(rank), m_suit(suit), m_deckOrigin(deckOrigin) {}
 
-    [[nodiscard]] Rank rank() const noexcept { return m_rank; }
-    [[nodiscard]] Suit suit() const noexcept { return m_suit; }
-    [[nodiscard]] int deckOrigin() const noexcept { return m_deckOrigin; }
-    [[nodiscard]] bool isJoker() const noexcept { return m_rank == Rank::Joker; }
+        [[nodiscard]] Rank rank() const noexcept { return m_rank; }
+        [[nodiscard]] Suit suit() const noexcept { return m_suit; }
+        [[nodiscard]] int deckOrigin() const noexcept { return m_deckOrigin; }
+        [[nodiscard]] bool isJoker() const noexcept { return m_rank == Rank::Joker; }
 
-    // Three-way comparison (C++20 spaceship operator)
-    // Explicit comparison operators (compatible with all Apple Clang versions)
-    bool operator==(const Card& other) const noexcept {
-        return m_rank == other.m_rank &&
-               m_suit == other.m_suit &&
-               m_deckOrigin == other.m_deckOrigin;
-    }
+        // Three-way comparison (C++20 spaceship operator)
+        // Explicit comparison operators (compatible with all Apple Clang versions)
+        bool operator==(const Card& other) const noexcept {
+            return m_rank == other.m_rank &&
+                m_suit == other.m_suit &&
+                m_deckOrigin == other.m_deckOrigin;
+        }
 
-    bool operator<(const Card& other) const noexcept {
-        if (m_deckOrigin != other.m_deckOrigin) return m_deckOrigin < other.m_deckOrigin;
-        if (m_suit != other.m_suit) return static_cast<int>(m_suit) < static_cast<int>(other.m_suit);
-        return static_cast<int>(m_rank) < static_cast<int>(other.m_rank);
-    }
+        bool operator<(const Card& other) const noexcept {
+            if (m_deckOrigin != other.m_deckOrigin) return m_deckOrigin < other.m_deckOrigin;
+            if (m_suit != other.m_suit) return static_cast<int>(m_suit) < static_cast<int>(other.m_suit);
+            return static_cast<int>(m_rank) < static_cast<int>(other.m_rank);
+        }
 
-    [[nodiscard]] std::string toString() const;
+        [[nodiscard]] std::string toString() const;
 
-private:
-    Rank m_rank;
-    Suit m_suit;
-    int m_deckOrigin; // Differentiates identical cards in multi-deck games
+    private:
+        Rank m_rank;
+        Suit m_suit;
+        int m_deckOrigin; // Differentiates identical cards in multi-deck games
 };
