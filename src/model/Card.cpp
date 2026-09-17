@@ -17,7 +17,6 @@ std::string Card::toString() const {
         case Rank::Nine:           rankStr = "9"; break;
         case Rank::Ten:            rankStr = "10"; break;
         case Rank::Jack_Fante:     rankStr = "Fante/Jack"; break;
-        case Rank::Knight_Cavallo: rankStr = "Cavallo"; break;
         case Rank::Queen_Regina:   rankStr = "Regina/Queen"; break;
         case Rank::King_Re:        rankStr = "Re/King"; break;
         default:                   rankStr = "?"; break;

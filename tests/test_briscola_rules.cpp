@@ -8,7 +8,7 @@ TEST(BriscolaRulesTest, PointsCalculation) {
     EXPECT_EQ(rules.calculateCardPoints(Card(Rank::Ace, Suit::Bastoni_Clubs, 0)), 11);
     EXPECT_EQ(rules.calculateCardPoints(Card(Rank::Three, Suit::Coppe_Hearts, 0)), 10);
     EXPECT_EQ(rules.calculateCardPoints(Card(Rank::King_Re, Suit::Denari_Diamonds, 0)), 4);
-    EXPECT_EQ(rules.calculateCardPoints(Card(Rank::Knight_Cavallo, Suit::Spade_Spades, 0)), 3);
+    EXPECT_EQ(rules.calculateCardPoints(Card(Rank::Queen_Regina, Suit::Spade_Spades, 0)), 3);
     EXPECT_EQ(rules.calculateCardPoints(Card(Rank::Jack_Fante, Suit::Spade_Spades, 0)), 2);
     EXPECT_EQ(rules.calculateCardPoints(Card(Rank::Seven, Suit::Denari_Diamonds, 0)), 0);
 }

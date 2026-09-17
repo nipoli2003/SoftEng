@@ -116,7 +116,6 @@ void BriscolaEngine::resolveCurrentTrick() {
     std::size_t winIndex = m_rules->evaluateTrick(trickCards);
     int winnerId = m_tableCards[winIndex].playerId;
 
-    // Distribute captured cards to the trick winner
     for (const auto& item : m_tableCards) {
         m_players[winnerId].captureCard(item.card);
     }
@@ -124,14 +123,13 @@ void BriscolaEngine::resolveCurrentTrick() {
     m_state.lastTrickWinnerId = winnerId;
     m_state.statusMessage = m_players[winnerId].name() + " won the trick!";
 
-    // Winner leads next round
     m_activeTurnIndex = winnerId;
     m_trickLeaderIndex = winnerId;
     m_tableCards.clear();
 
     replenishHands();
 
-    // Check game over condition
+    // Check if hands and deck are completely depleted
     bool allEmpty = true;
     for (const auto& p : m_players) {
         if (!p.hand().empty()) {
@@ -142,7 +140,28 @@ void BriscolaEngine::resolveCurrentTrick() {
 
     if (allEmpty && m_deck.empty() && !m_trumpCard.has_value()) {
         m_state.phase = GamePhase::GameOver;
-        m_state.statusMessage = "Game Over!";
+
+        // Calculate final scores
+        auto scores = m_rules->calculateTeamScores(m_players);
+        int humanTeamId = m_players[m_humanPlayerIndex].teamId();
+        int humanScore = scores[humanTeamId];
+
+        // In Briscola there are 120 points total; 61+ wins, 60 is a tie
+        int opponentScore = 0;
+        for (const auto& [teamId, score] : scores) {
+            if (teamId != humanTeamId) {
+                opponentScore = score;
+                break;
+            }
+        }
+
+        if (humanScore > opponentScore) {
+            m_state.statusMessage = "YOU WIN! (" + std::to_string(humanScore) + " - " + std::to_string(opponentScore) + ")";
+        } else if (humanScore < opponentScore) {
+            m_state.statusMessage = "YOU LOSE! (" + std::to_string(humanScore) + " - " + std::to_string(opponentScore) + ")";
+        } else {
+            m_state.statusMessage = "IT'S A DRAW! (60 - 60)";
+        }
     }
 }
 

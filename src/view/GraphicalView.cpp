@@ -78,7 +78,7 @@ void GraphicalView::drawCard(const Card& card, Rectangle dest, bool faceUp) {
     std::string rankStr = std::to_string(static_cast<int>(card.rank()));
     if (card.rank() == Rank::Ace) rankStr = "A";
     else if (card.rank() == Rank::Jack_Fante) rankStr = "J";
-    else if (card.rank() == Rank::Knight_Cavallo) rankStr = "C";
+    else if (card.rank() == Rank::Queen_Regina) rankStr = "Q";
     else if (card.rank() == Rank::King_Re) rankStr = "K";
 
     std::string suitStr;
@@ -113,7 +113,7 @@ void GraphicalView::drawTable(const GameState& state) {
 
     if (state.trumpCard) {
         // Draw the Briscola card horizontally beneath the deck, extended to the right
-        Rectangle trumpRect{deckX + 30.0f, deckY + 20.0f, 120.0f, 80.0f};
+        Rectangle trumpRect{deckX + 50.0f, deckY + 20.0f, 140.0f, 80.0f};
         drawCard(*state.trumpCard, trumpRect, true);
 
         // Draw deck vertically over the left half of the trump card
@@ -165,11 +165,14 @@ void GraphicalView::drawPlayerHand(const GameState& state) {
 
 void GraphicalView::drawHUD(const GameState& state) {
     int sw = GetScreenWidth();
+    int sh = GetScreenHeight();
 
-    // Top status message
-    DrawText(state.statusMessage.c_str(), 
-             (sw - MeasureText(state.statusMessage.c_str(), 20)) / 2, 
-             25, 20, RAYWHITE);
+    // Standard top status message during active play
+    if (state.phase != GamePhase::GameOver) {
+        DrawText(state.statusMessage.c_str(), 
+                 (sw - MeasureText(state.statusMessage.c_str(), 20)) / 2, 
+                 25, 20, RAYWHITE);
+    }
 
     // Deck count
     std::string deckInfo = "Deck: " + std::to_string(state.deckRemaining);
@@ -178,8 +181,38 @@ void GraphicalView::drawHUD(const GameState& state) {
     // Score display
     int yOffset = 30;
     for (const auto& [teamId, score] : state.teamScores) {
-        std::string scoreStr = "Team " + std::to_string(teamId) + " Points: " + std::to_string(score);
+        std::string scoreStr = "Team " + std::to_string(teamId) + ": " + std::to_string(score) + " pts";
         DrawText(scoreStr.c_str(), sw - 220, yOffset, 18, RAYWHITE);
         yOffset += 24;
+    }
+
+    // CENTERED GAME-OVER BANNER
+    if (state.phase == GamePhase::GameOver) {
+        // Dim the table background slightly
+        DrawRectangle(0, 0, sw, sh, Color{0, 0, 0, 160});
+
+        int bannerW = 600;
+        int bannerH = 160;
+        int bannerX = (sw - bannerW) / 2;
+        int bannerY = (sh - bannerH) / 2;
+
+        // Banner box
+        DrawRectangle(bannerX, bannerY, bannerW, bannerH, Color{25, 25, 25, 240});
+        DrawRectangleLinesEx(Rectangle{static_cast<float>(bannerX), static_cast<float>(bannerY), static_cast<float>(bannerW), static_cast<float>(bannerH)}, 3, GOLD);
+
+        // Win/Loss text
+        const char* msg = state.statusMessage.c_str();
+        int fontSize = 36;
+        int textW = MeasureText(msg, fontSize);
+
+        Color textColor = RAYWHITE;
+        if (state.statusMessage.rfind("YOU WIN", 0) == 0) textColor = GREEN;
+        else if (state.statusMessage.rfind("YOU LOSE", 0) == 0) textColor = RED;
+        else textColor = YELLOW;
+
+        DrawText(msg, (sw - textW) / 2, bannerY + 45, fontSize, textColor);
+
+        const char* subMsg = "Thanks for playing!";
+        DrawText(subMsg, (sw - MeasureText(subMsg, 20)) / 2, bannerY + 100, 20, LIGHTGRAY);
     }
 }

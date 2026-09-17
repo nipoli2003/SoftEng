@@ -35,7 +35,7 @@ Deck createItalian40() {
     // 1 to 7, plus Fante (Jack), Cavallo (Knight), and Re (King)
     constexpr std::array<Rank, 10> ranks = {
         Rank::Ace, Rank::Two, Rank::Three, Rank::Four, Rank::Five,
-        Rank::Six, Rank::Seven, Rank::Jack_Fante, Rank::Knight_Cavallo, Rank::King_Re
+        Rank::Six, Rank::Seven, Rank::Jack_Fante, Rank::Queen_Regina, Rank::King_Re
     };
 
     for (auto suit : suits) {

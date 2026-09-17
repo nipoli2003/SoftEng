@@ -16,10 +16,9 @@ enum class Rank {
     Ace = 1,
     Two, Three, Four, Five, Six, Seven,
     Eight, Nine, Ten,
-    Jack_Fante,       // 8 in Italian deck, 11 in Standard
-    Knight_Cavallo,   // 9 in Italian deck
-    Queen_Regina,     // 12 in Standard deck
-    King_Re,          // 10 in Italian deck, 13 in Standard
+    Jack_Fante,
+    Queen_Regina,
+    King_Re,
     Joker
 };
 

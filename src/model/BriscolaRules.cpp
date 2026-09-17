@@ -17,7 +17,7 @@ int BriscolaRules::calculateCardPoints(const Card& card) const {
         case Rank::Ace:            return 11;
         case Rank::Three:          return 10;
         case Rank::King_Re:        return 4;
-        case Rank::Knight_Cavallo: return 3;
+        case Rank::Queen_Regina:   return 3;
         case Rank::Jack_Fante:     return 2;
         default:                   return 0;
     }
@@ -36,7 +36,7 @@ int BriscolaRules::rankStrength(Rank rank) const noexcept {
         case Rank::Ace:            return 10;
         case Rank::Three:          return 9;
         case Rank::King_Re:        return 8;
-        case Rank::Knight_Cavallo: return 7;
+        case Rank::Queen_Regina:   return 7;
         case Rank::Jack_Fante:     return 6;
         case Rank::Seven:          return 5;
         case Rank::Six:            return 4;
